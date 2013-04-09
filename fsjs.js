@@ -2,20 +2,26 @@ var http = require('http')
 , path = require('path')
 , fs = require('fs')
 , modules = {}
-, reRequire = function(event,filename){
+, requireAgain = function(event,filename){
   var ext = path.extname(filename)
   , name = path.basename(filename,ext)
   modules[name] = require(filename)
 }
-, watchAll = function(dir,callback){
-  fs.watch(dir,rerequire)
-  callback()
+, requireAll = function(dir,callback){
+  fs.readdir(dir,function(e,files){
+    if (!e) files.forEach(function(filename,filenumber){
+      requireAgain('rename',filename)
+      if (filenumber===files.length-1) callback()
+    })
+  })
 }
 , router = function(req,res){
   require.main.exports.get()
 }
 exports = function(port){
-  watchAll(path.dirname(require.main.filename),function(){
+  var dir = path.dirname(require.main.filename)
+  requireAll(dir,function(){
+    fs.watch(dir,requireAgain)
     http.createServer(router).listen(port)
   })
 }
