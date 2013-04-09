@@ -17,11 +17,11 @@ var http = require('http')
   })
 }
 , router = function(req,res){
-  var url = url.parse(req.url,true)
-  , parts = url.pathname.split('/')
+  var urlObject = url.parse(req.url,true)
+  , parts = urlObject.pathname.split('/')
   , method = req.method.toLowerCase()
-  if ((name = parts[0])) require.cache[name].method()
-  else require.main.exports.method()
+  if (((name=parts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,parts.slice(1))
+  else require.main.exports.method.apply(this,parts)
 }
 exports = function(port){
   var dir = path.dirname(require.main.filename)
