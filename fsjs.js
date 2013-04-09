@@ -1,11 +1,11 @@
 var http = require('http')
 , path = require('path')
 , fs = require('fs')
-, modules = {}
 , requireAgain = function(event,filename){
   var ext = path.extname(filename)
   , name = path.basename(filename,ext)
-  modules[name] = require(filename)
+  if (require.cache[name]) delete require.cache[name]
+  require(filename)
 }
 , requireAll = function(dir,callback){
   fs.readdir(dir,function(e,files){
