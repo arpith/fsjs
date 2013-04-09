@@ -1,6 +1,7 @@
 var http = require('http')
 , path = require('path')
 , fs = require('fs')
+, url = require('url')
 , requireAgain = function(event,filename){
   var ext = path.extname(filename)
   , name = path.basename(filename,ext)
@@ -16,7 +17,11 @@ var http = require('http')
   })
 }
 , router = function(req,res){
-  require.main.exports.get()
+  var url = url.parse(req.url,true)
+  , parts = url.pathname.split('/')
+  , method = req.method.toLowerCase()
+  if ((name = parts[0])) require.cache[name].method()
+  else require.main.exports.method()
 }
 exports = function(port){
   var dir = path.dirname(require.main.filename)
