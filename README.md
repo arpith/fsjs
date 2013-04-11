@@ -5,8 +5,8 @@ Tiny opiniated web framework for [node](http://nodejs.org) that relies heavily o
 
 ```js
 require('fsjs')(3000)
-exports.get = function(){
-  return 'Hello World'
+exports.get = function(callback){
+  callback('Hello World')
 }
 ```
 
