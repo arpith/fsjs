@@ -16,11 +16,8 @@ var http = require('http')
     })
   })
 }
-, router = function(req,res){
-  var urlObject = url.parse(req.url,true)
-  , parts = urlObject.pathname.split('/')
-  , method = req.method.toLowerCase()
-  , write = function(data){
+exports = function(port){
+  var callback = function(data){
     if (typeof data === 'string') res.write(data)
     else {
       res.writeHead(200,{"Content-Type":"application/json"})
@@ -28,13 +25,15 @@ var http = require('http')
     }
     res.end()
   }
-  if (((name=parts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,parts.slice(1),write)
-  else require.main.exports.method.apply(this,parts,write)
-}
-exports = function(port){
-  var dir = path.dirname(require.main.filename)
+  , dir = path.dirname(require.main.filename)
+  , urlparts = url.parse(req.url,true).pathname.split('/')
+  , method = req.method.toLowerCase()
+  if (typeof arguments[arguments.length-1]==='function') callback = Array.prototype.slice.call(arguments).pop()
   requireAll(dir,function(){
     fs.watch(dir,requireAgain)
-    http.createServer(router).listen(port)
+    http.createServer(function(req,res){
+      if (((name=urlparts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,urlparts.slice(1),callback)
+      else require.main.exports.method.apply(this,urlparts,callback)
+    }).listen(port)
   })
 }
