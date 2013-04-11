@@ -20,8 +20,13 @@ var http = require('http')
   var urlObject = url.parse(req.url,true)
   , parts = urlObject.pathname.split('/')
   , method = req.method.toLowerCase()
-  if (((name=parts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,parts.slice(1))
-  else require.main.exports.method.apply(this,parts)
+  , write = function(data){
+    if (typeof data === 'string') res.write(data)
+    else res.write(JSON.stringify(data))
+    res.end()
+  }
+  if (((name=parts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,parts.slice(1),write)
+  else require.main.exports.method.apply(this,parts,write)
 }
 exports = function(port){
   var dir = path.dirname(require.main.filename)
