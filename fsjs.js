@@ -34,6 +34,8 @@ exports = function(port){
       }
       if (typeof args[args.length-1]==='function') callback = args.pop
       args.slice(1).forEach(function(arg){
+        if (!urlparts.length) break
+        if (require.cache[urlparts[0]]) break
         this[arg] = urlparts.shift()
       })
       if (((name=urlparts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,urlparts.slice(1),callback)
