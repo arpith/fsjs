@@ -32,7 +32,10 @@ exports = function(port){
         }
         res.end()
       }
-      if (typeof args[args.length-1]==='function') callback = args.pop
+      if (typeof args[args.length-1]==='function') callback = function (data) {
+        var newCallback = args.pop
+        newCallback(data,callback)
+      }
       args.slice(1).forEach(function(arg){
         if (!urlparts.length) break
         if (require.cache[urlparts[0]]) break
