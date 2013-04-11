@@ -17,15 +17,14 @@ var http = require('http')
   })
 }
 exports = function(port){
-  var callback = null
-  , dir = path.dirname(require.main.filename)
-  if (typeof arguments[arguments.length-1]==='function') callback = Array.prototype.slice.call(arguments).pop()
+  var dir = path.dirname(require.main.filename)
+  , args = Array.prototype.slice.call(arguments)
   requireAll(dir,function(){
     fs.watch(dir,requireAgain)
     http.createServer(function(req,res){
       var urlparts = url.parse(req.url,true).pathname.split('/')
       , method = req.method.toLowerCase()
-      if (!callback) callback = function(data){
+      , callback = function(data){
         if (typeof data === 'string') res.write(data)
         else {
           res.writeHead(200,{"Content-Type":"application/json"})
@@ -33,6 +32,10 @@ exports = function(port){
         }
         res.end()
       }
+      if (typeof args[args.length-1]==='function') callback = args.pop
+      args.slice(1).forEach(function(arg){
+        this[arg] = urlparts.shift()
+      })
       if (((name=urlparts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,urlparts.slice(1),callback)
       else require.main.exports.method.apply(this,urlparts,callback)
     }).listen(port)
