@@ -19,6 +19,8 @@ fsjs watches the current application's entry point directory for changes, and re
 $ ls
 edit.js
 app.js
+$ cat app.js
+require('fsjs')(8000)
 $ node app.js
 ```
 It handles urls like '/edit/master' by calling edit.js's exported method
@@ -47,6 +49,10 @@ exports.get = function(branch,file) {
 // arpith
   console.log(this.repo)
 // fsjs
+  console.log(branch)
+// master
+  console.log(file)
+// README.md
   callback('done')
 }
 ```
