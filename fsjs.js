@@ -22,7 +22,10 @@ var http = require('http')
   , method = req.method.toLowerCase()
   , write = function(data){
     if (typeof data === 'string') res.write(data)
-    else res.write(JSON.stringify(data))
+    else {
+      res.writeHead(200,{"Content-Type":"application/json"})
+      res.write(JSON.stringify(data))
+    }
     res.end()
   }
   if (((name=parts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,parts.slice(1),write)
