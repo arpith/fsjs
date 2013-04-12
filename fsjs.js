@@ -2,13 +2,14 @@ var http = require('http')
 , path = require('path')
 , fs = require('fs')
 , url = require('url')
+, dir = path.dirname(require.main.filename)
 , requireAgain = function(event,filename){
   var ext = path.extname(filename)
   , name = path.basename(filename,ext)
   if (require.cache[name]) delete require.cache[name]
-  require(filename)
+  require(path.resolve(dir,filename))
 }
-, requireAll = function(dir,callback){
+, requireAll = function(callback){
   fs.readdir(dir,function(e,files){
     if (!e) files.forEach(function(filename,filenumber){
       requireAgain('rename',filename)
@@ -17,9 +18,8 @@ var http = require('http')
   })
 }
 module.exports = function(port){
-  var dir = path.dirname(require.main.filename)
-  , args = Array.prototype.slice.call(arguments)
-  requireAll(dir,function(){
+  var args = Array.prototype.slice.call(arguments)
+  requireAll(function(){
     fs.watch(dir,requireAgain)
     http.createServer(function(req,res){
       var urlparts = url.parse(req.url,true).pathname.split('/')
