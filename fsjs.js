@@ -16,7 +16,7 @@ var http = require('http')
     })
   })
 }
-exports = function(port){
+module.exports = function(port){
   var dir = path.dirname(require.main.filename)
   , args = Array.prototype.slice.call(arguments)
   requireAll(dir,function(){
