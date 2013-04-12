@@ -1,0 +1,23 @@
+{
+  "name": "fsjs",
+  "version": "0.0.0",
+  "description": "Tiny opiniated web framework for node that relies heavily on fs.",
+  "main": "fsjs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arpith/fsjs.git"
+  },
+  "keywords": [
+    "web",
+    "framework",
+    "fs",
+    "watch"
+  ],
+  "author": "Arpith Siromoney",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "da1fd4f5c5ef355ced18689e5427f67c8d3f0c39"
+}

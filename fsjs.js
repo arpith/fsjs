@@ -37,8 +37,8 @@ exports = function(port){
         newCallback(data,callback)
       }
       args.slice(1).forEach(function(arg){
-        if (!urlparts.length) break
-        if (require.cache[urlparts[0]]) break
+        if (!urlparts.length) return
+        if (require.cache[urlparts[0]]) return
         this[arg] = urlparts.shift()
       })
       if (((name=urlparts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,urlparts.slice(1).concat(callback))
