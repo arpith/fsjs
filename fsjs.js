@@ -6,7 +6,12 @@ var http = require('http')
 , requireAgain = function(event,filename){
   var name = path.resolve(dir,filename)
   if (require.cache[name]) delete require.cache[name]
-  require(name)
+  try {
+    require(name)
+  }
+  catch {
+    console.log("Error requiring "+filename)
+  }
 }
 , requireAll = function(callback){
   fs.readdir(dir,function(e,files){
