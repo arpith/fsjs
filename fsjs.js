@@ -9,8 +9,9 @@ var http = require('http')
   try {
     require(name)
   }
-  catch {
+  catch(e) {
     console.log("Error requiring "+filename)
+    console.log(e)
   }
 }
 , requireAll = function(callback){
