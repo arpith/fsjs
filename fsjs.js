@@ -22,7 +22,8 @@ module.exports = function(port){
   requireAll(function(){
     fs.watch(dir,requireAgain)
     http.createServer(function(req,res){
-      var urlparts = url.parse(req.url,true).pathname.split('/')
+      var urlpathname = url.parse(req.url).pathname
+      , urlparts = urlpathname.split('/').slice(1)
       , method = req.method.toLowerCase()
       , callback = function(data){
         if (typeof data === 'string') res.write(data)
@@ -38,10 +39,13 @@ module.exports = function(port){
       }
       args.slice(1).forEach(function(arg){
         if (!urlparts.length) return
-        if (require.cache[urlparts[0]]) return
+        if (require.cache[path.resolve(dir,urlparts[0]+".js")]) return
         this[arg] = urlparts.shift()
       })
-      if (((name=urlparts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,urlparts.slice(1).concat([callback]))
+      if (urlparts[urlparts.length-1]==="") urlparts.pop()
+      if ((modu=require.cache[path.resolve(dir,urlparts[0]+'.js')])) {
+        modu.exports[method].apply(this,urlparts.slice(1).concat([callback]))
+      }
       else require.main.exports[method].apply(this,urlparts.concat([callback]))
     }).listen(port)
   })
