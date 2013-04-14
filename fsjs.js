@@ -41,8 +41,8 @@ module.exports = function(port){
         if (require.cache[urlparts[0]]) return
         this[arg] = urlparts.shift()
       })
-      if (((name=urlparts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,urlparts.slice(1).concat(callback))
-      else require.main.exports[method].apply(this,urlparts.concat(callback))
+      if (((name=urlparts[0]))&&(require.cache[name])) require.cache[name].method.apply(this,urlparts.slice(1).concat([callback]))
+      else require.main.exports[method].apply(this,urlparts.concat([callback]))
     }).listen(port)
   })
 }
