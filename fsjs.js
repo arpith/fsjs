@@ -3,30 +3,28 @@ var http = require('http')
 , fs = require('fs')
 , url = require('url')
 , dir = path.dirname(require.main.filename)
-, requireAgain = function(event,filename){
-  var name = path.resolve(dir,filename)
-  if (require.cache[name]) delete require.cache[name]
-  try {
-    require(name)
-  }
-  catch(e) {
-    console.log("Error requiring "+filename)
-    console.log(e)
-  }
-}
 , requireAll = function(callback){
+  if (typeof callback !== "function") callback = function(){}
   fs.readdir(dir,function(e,files){
     if (!e) files.forEach(function(filename,filenumber){
       var name = path.resolve(dir,filename)
       console.log(name)
-      if (!require.cache[name]) require(name)
+      if (require.cache[name]) delete require.cache[name]
+      try {
+        require(name)
+        console.log('Requiring '+name)
+      }
+      catch (e) {
+        console.log('Error requiring '+name)
+        console.log(e)
+      }
       if (filenumber===files.length-1) callback()
     })
   })
 }
 module.exports = function(port){
   var args = Array.prototype.slice.call(arguments)
-  fs.watch(dir,requireAgain)
+  fs.watch(dir,requireAll)
   requireAll(function(){
     http.createServer(function(req,res){
       var urlparts = url.parse(req.url).pathname.split('/').slice(1)
