@@ -8,7 +8,7 @@ var http = require('http')
   fs.readdir(dir,function(e,files){
     if (!e) files.forEach(function(filename,filenumber){
       var name = path.resolve(dir,filename)
-      console.log(name)
+      if (name === require.main.filename) return
       if (require.cache[name]) delete require.cache[name]
       try {
         require(name)
