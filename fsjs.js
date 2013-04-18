@@ -30,6 +30,7 @@ module.exports = function(port){
       var urlparts = url.parse(req.url).pathname.split('/').slice(1)
       , method = req.method.toLowerCase()
       , callback = function(data){
+        console.log("data is finally: "+data)
         if (typeof data === 'string') res.write(data)
         else {
           res.writeHead(200,{"Content-Type":"application/json"})
@@ -37,9 +38,13 @@ module.exports = function(port){
         }
         res.end()
       }
-      if (typeof args[args.length-1]==='function') callback = function (data) {
-        var newCallback = args.pop
-        newCallback(data,callback)
+      if (typeof args[args.length-1]==='function') {
+        var newCallback = args.pop()
+        , oldCallback = callback
+        callback = function (data) {
+          console.log("data is: "+data)
+          newCallback(data,oldCallback)
+        }
       }
       if (urlparts[urlparts.length-1]==="") urlparts.pop()
       args.slice(1).forEach(function(arg){
