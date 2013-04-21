@@ -25,31 +25,31 @@ var http = require('http')
 module.exports = function(port){
   var args = Array.prototype.slice.call(arguments)
   fs.watch(dir,requireAll)
-  http.createServer(function(req,res){
-    var urlparts = url.parse(req.url).pathname.split('/').slice(1)
-    , method = req.method.toLowerCase()
-    , callback = function(data){
-      console.log("data is finally: "+data)
-      if (typeof data === 'string') res.write(data)
-      else {
-        res.writeHead(200,{"Content-Type":"application/json"})
-        res.write(JSON.stringify(data))
+  requireAll(function(){
+    http.createServer(function(req,res){
+      var urlparts = url.parse(req.url).pathname.split('/').slice(1)
+      , method = req.method.toLowerCase()
+      , callback = function(data){
+        console.log("data is finally: "+data)
+        if (typeof data === 'string') res.write(data)
+        else {
+          res.writeHead(200,{"Content-Type":"application/json"})
+          res.write(JSON.stringify(data))
+        }
+        res.end()
       }
-      res.end()
-    }
-    if (typeof args[args.length-1]==='function') {
-      var newCallback = args.pop()
-      , oldCallback = callback
-      callback = function(data){
-        console.log("data is: "+data)
-        newCallback(data,function(data){
-          console.log("data is finally: "+data)
-          callback()
-        })
+      if (typeof args[args.length-1]==='function') {
+        var newCallback = args.pop()
+        , oldCallback = callback
+        callback = function(data){
+          console.log("data is: "+data)
+          newCallback(data,function(data){
+            console.log("data is finally: "+data)
+            callback()
+          })
+        }
       }
-    }
-    if (urlparts[urlparts.length-1]==="") urlparts.pop()
-    requireAll(function(){
+      if (urlparts[urlparts.length-1]==="") urlparts.pop()
       args.slice(1).forEach(function(arg){
         if (!urlparts.length) return
         if (require.cache[path.resolve(dir,urlparts[0]+".js")]) return
@@ -59,6 +59,6 @@ module.exports = function(port){
         modu.exports[method].apply(this,urlparts.slice(1).concat([callback]))
       }
       else require.main.exports[method].apply(this,urlparts.concat([callback]))
-    })
-  }).listen(port)
+    }).listen(port)
+  })
 }
