@@ -54,7 +54,7 @@ module.exports = function(port){
         this[arg] = urlparts.shift()
       })
       this.request = req
-      this.result = res
+      this.response = res
       if ((modu=require.cache[path.resolve(dir,urlparts[0]+'.js')])) {
         modu.exports[method].apply(this,urlparts.slice(1).concat([callback]))
       }
