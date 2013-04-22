@@ -65,3 +65,12 @@ exports.get = function(){
 // undefined
 }
 ```
+Finally, this also has the request and response that http.createServer passes:
+```js
+exports.get = function(){
+  console.log(this.request.url)
+// /arpith/fsjs/edit/master/readme.md
+  console.log(typeof this.response)
+// object
+}
+```
