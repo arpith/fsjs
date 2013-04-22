@@ -23,14 +23,13 @@ var http = require('http')
   })
 }
 module.exports = function(port){
-  var args = Array.prototype.slice.call(arguments)
+  args = Array.prototype.slice.call(arguments)
   fs.watch(dir,requireAll)
   requireAll(function(){
     http.createServer(function(req,res){
       var urlparts = url.parse(req.url).pathname.split('/').slice(1)
       , method = req.method.toLowerCase()
       , callback = function(data){
-        console.log("data is finally: "+data)
         if (typeof data === 'string') res.write(data)
         else {
           res.writeHead(200,{"Content-Type":"application/json"})
@@ -39,13 +38,11 @@ module.exports = function(port){
         res.end()
       }
       if (typeof args[args.length-1]==='function') {
-        var newCallback = args.pop()
+        var newCallback = args[args.length-1]
         , oldCallback = callback
         callback = function(data){
-          console.log("data is: "+data)
           newCallback(data,function(data){
-            console.log("data is finally: "+data)
-            callback()
+            oldCallback(data)
           })
         }
       }
@@ -53,8 +50,11 @@ module.exports = function(port){
       args.slice(1).forEach(function(arg){
         if (!urlparts.length) return
         if (require.cache[path.resolve(dir,urlparts[0]+".js")]) return
+        if (typeof arg !== "string") return
         this[arg] = urlparts.shift()
       })
+      this.request = req
+      this.result = res
       if ((modu=require.cache[path.resolve(dir,urlparts[0]+'.js')])) {
         modu.exports[method].apply(this,urlparts.slice(1).concat([callback]))
       }
