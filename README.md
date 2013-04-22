@@ -39,7 +39,7 @@ require('fsjs')(8000,function(data,defaultCallback){
 ```
 You can also pass names for arguments in the url before the module name:
 ```js
-require('fsjs')(8000,user,repo,callback)
+require('fsjs')(8000,'user','repo',callback)
 ```
 They are passed as properties of this to your module, so '/arpith/fsjs/edit/master/README.md' can be handled by edit.js:
 ```js
