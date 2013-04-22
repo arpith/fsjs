@@ -70,7 +70,7 @@ Finally, this also has the request and response that http.createServer passes:
 exports.get = function(){
   console.log(this.request.url)
 // /arpith/fsjs/edit/master/readme.md
-  console.log(typeof this.response)
-// object
+  console.log(this.response.statusCode)
+// 200
 }
 ```
