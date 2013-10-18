@@ -33,8 +33,9 @@ var http = require('http')
 }
 , watchDirectory = function(callback){
   fs.watch(dir,function(event,filename){
-    requireFile(filename,callback)
+    requireFile(filename)
   })
+  callback()
 }
 module.exports = function(port){
   var args = Array.prototype.slice.call(arguments)
