@@ -15,7 +15,7 @@ var http = require('http')
       else {
         console.log('Error requiring '+name)
       }
-      callback()
+      if (callback) callback()
     }
   }  
 }
