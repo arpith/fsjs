@@ -36,25 +36,6 @@ var http = require('http')
     requireFile(filename,callback)
   })
 }
-, requireAll = function(callback){
-  if (typeof callback !== "function") callback = function(){}
-  fs.readdir(dir,function(e,files){
-    if (!e) files.forEach(function(filename,filenumber){
-      var name = path.resolve(dir,filename)
-      if (name === require.main.filename) return
-      if (require.cache[name]) delete require.cache[name]
-      try {
-        require(name)
-        console.log('Requiring '+name)
-      }
-      catch (e) {
-        console.log('Error requiring '+name)
-        console.log(e)
-      }
-      if (filenumber===files.length-1) callback()
-    })
-  })
-}
 module.exports = function(port){
   var args = Array.prototype.slice.call(arguments)
   requireDirectory(function(){
