@@ -44,7 +44,7 @@ module.exports = function(port){
       http.createServer(function(req,res){
         var urlparts = url.parse(req.url).pathname.split('/').slice(1)
         , method = req.method.toLowerCase()
-        , callback = function(data){
+        , defaultCallback = function(data){
           if (typeof data === 'string') res.write(data)
           else {
             res.writeHead(200,{"Content-Type":"application/json"})
@@ -52,15 +52,10 @@ module.exports = function(port){
           }
           res.end()
         }
-        if (typeof args[args.length-1]==='function') {
-          var newCallback = args[args.length-1]
-          , oldCallback = callback
-          callback = function(data){
-            newCallback(data,function(data){
-              oldCallback(data)
-            })
-          }
+        if (typeof args[args.length-1]==='function') callback = function(data){
+          args[args.length-1](data,defaultCallback)
         }
+        else callback = defaultCallback
         if (urlparts[urlparts.length-1]==="") urlparts.pop()
         args.slice(1).forEach(function(arg){
           if (!urlparts.length) return
