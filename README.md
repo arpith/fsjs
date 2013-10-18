@@ -14,7 +14,7 @@ exports.get = function(callback){
     $ npm install -g fsjs
 
 ## What it does
-fsjs watches the current application's entry point directory for changes, and requires all modules
+fsjs watches the current application's entry point directory for changes, and requires all files ending with '.js'
 ```
 $ ls
 edit.js
