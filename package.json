@@ -1,6 +1,6 @@
 {
   "name": "fsjs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Tiny opiniated web framework for node that relies heavily on fs.",
   "main": "fsjs.js",
   "scripts": {
