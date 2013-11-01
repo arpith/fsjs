@@ -15,9 +15,9 @@ var http = require('http')
       catch (e) {
         console.log('Error requiring '+name)
       }
-      if (callback) callback()
     }
-  }  
+  } 
+  if (callback) callback()
 }
 , requireDirectory = function(callback){
   fs.readdir(dir,function(e,files){
@@ -32,7 +32,6 @@ var http = require('http')
   })
 }
 , watchDirectory = function(){
-  console.log('Watching '+dir)
   fs.watch(dir,function(event,filename){
     requireFile(filename)
   })
