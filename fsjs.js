@@ -12,7 +12,7 @@ var http = require('http')
         require(name)
         console.log('Requiring '+name)
       }
-      else {
+      catch (e) {
         console.log('Error requiring '+name)
       }
       if (callback) callback()
