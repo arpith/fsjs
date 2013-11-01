@@ -32,8 +32,8 @@ var http = require('http')
   })
 }
 , watchDirectory = function(){
+  console.log('Watching '+dir)
   fs.watch(dir,function(event,filename){
-    console.log('Watching '+dir)
     requireFile(filename)
   })
 }
