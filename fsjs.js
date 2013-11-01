@@ -33,13 +33,14 @@ var http = require('http')
 }
 , watchDirectory = function(){
   fs.watch(dir,function(event,filename){
+    console.log('Watching '+dir)
     requireFile(filename)
   })
 }
 module.exports = function(port){
   var args = Array.prototype.slice.call(arguments)
+  watchDirectory()
   requireDirectory(function(){
-    watchDirectory()
     http.createServer(function(req,res){
       var urlparts = url.parse(req.url).pathname.split('/').slice(1)
       , method = req.method.toLowerCase()
