@@ -64,10 +64,14 @@ module.exports = function(port){
       })
       this.request = req
       this.response = res
-      if ((modu=require.cache[path.resolve(dir,urlparts[0]+'.js')])) {
+      var modu = require.cache[path.resolve(dir,urlparts[0]+'.js')]
+      if (modu && modu.exports[method]) {
         modu.exports[method].apply(this,urlparts.slice(1).concat([callback]))
       }
-      else require.main.exports[method].apply(this,urlparts.concat([callback]))
+      else if (require.main.exports[method]) {
+	    require.main.exports[method].apply(this,urlparts.concat([callback]))
+      }
+      else callback("oops")
     }).listen(port)
   })
 }
