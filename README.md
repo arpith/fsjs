@@ -5,7 +5,8 @@ Tiny opiniated web framework for [node](http://nodejs.org) that relies heavily o
 
 ```js
 require('fsjs')(8000)
-exports.get = function(callback){
+exports.get = function(){
+  var callback = arguments[arguments.length-1]
   callback('Hello World')
 }
 ```
@@ -25,7 +26,8 @@ $ node app.js
 ```
 It handles urls like '/edit/master' by calling edit.js's exported method
 ```js
-exports.get = function(branch,callback) {
+exports.get = function(branch) {   
+  var callback = arguments[arguments.length-1]
   console.log(branch)
 // master
   callback('Edited!')
