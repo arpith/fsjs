@@ -3,8 +3,7 @@ var http = require('http')
 , fs = require('fs')
 , url = require('url')
 , dir = path.dirname(require.main.filename)
-, requireFile = function(filename,callback){
-  var name = path.resolve(dir,filename)
+, requireFile = function(name,callback){
   if (name != require.main.filename) {
     if (path.extname(name) === '.js') {
       if (require.cache[name]) delete require.cache[name]
@@ -16,7 +15,7 @@ var http = require('http')
         console.log('Error requiring '+name)
       }
     }
-    else if (path.dirname(name) !== dir) requireDirectory(name,callback)
+    else requireDirectory(name,callback)
   } 
   if (callback) callback()
 }
@@ -24,7 +23,7 @@ var http = require('http')
   fs.readdir(dir,function(e,files){
     if (e) console.log('Error reading '+dir)
     else files.forEach(function(filename,filenumber){
-      requireFile(filename,function(){
+      requireFile(path.resolve(dir,filename),function(){
         if (filenumber === files.length-1) callback()
       })
     })
@@ -32,7 +31,7 @@ var http = require('http')
 }
 , watchDirectory = function(){
   fs.watch(dir,function(event,filename){
-    requireFile(filename)
+    requireFile(path.resolve(dir,filename))
   })
 }
 module.exports = function(port){
