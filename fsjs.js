@@ -23,13 +23,11 @@ var http = require('http')
 , requireDirectory = function(dir,callback){
   fs.readdir(dir,function(e,files){
     if (e) console.log('Error reading '+dir)
-    else {
-      files.forEach(function(filename,filenumber){
-        requireFile(filename,function(){
-          if (filenumber === files.length-1) callback()
-        })
+    else files.forEach(function(filename,filenumber){
+      requireFile(filename,function(){
+        if (filenumber === files.length-1) callback()
       })
-    }
+    })
   })
 }
 , watchDirectory = function(){
