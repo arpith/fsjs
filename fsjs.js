@@ -16,10 +16,11 @@ var http = require('http')
         console.log('Error requiring '+name)
       }
     }
+    else if (path.dirname(name) !== dir) requireDirectory(name,callback)
   } 
   if (callback) callback()
 }
-, requireDirectory = function(callback){
+, requireDirectory = function(dir,callback){
   fs.readdir(dir,function(e,files){
     if (e) console.log('Error reading '+dir)
     else {
@@ -39,7 +40,7 @@ var http = require('http')
 module.exports = function(port){
   var args = Array.prototype.slice.call(arguments)
   watchDirectory()
-  requireDirectory(function(){
+  requireDirectory(dir,function(){
     http.createServer(function(req,res){
       var urlparts = url.parse(req.url).pathname.split('/').slice(1)
       , method = req.method.toLowerCase()
