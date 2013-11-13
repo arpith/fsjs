@@ -45,7 +45,7 @@ module.exports = function(port){
       , defaultCallback = function(data){
         if (typeof data === 'string') res.write(data)
         else {
-          res.writeHead(200,{"Content-Type":"application/json"})
+          res.writeHead(200,{'Content-Type':'application/json'})
           res.write(JSON.stringify(data))
         }
         res.end()
@@ -54,11 +54,11 @@ module.exports = function(port){
         args[args.length-1](data,defaultCallback)
       }
       else callback = defaultCallback
-      if (urlparts[urlparts.length-1]==="") urlparts.pop()
+      if (urlparts[urlparts.length-1]==='') urlparts.pop()
       args.slice(1).forEach(function(arg){
         if (!urlparts.length) return
-        if (require.cache[path.resolve(dir,urlparts[0]+".js")]) return
-        if (typeof arg !== "string") return
+        if (require.cache[path.resolve(dir,urlparts[0]+'.js')]) return
+        if (typeof arg !== 'string') return
         this[arg] = urlparts.shift()
       })
       this.request = req
@@ -70,7 +70,7 @@ module.exports = function(port){
       else if (require.main.exports[method]) {
 	    require.main.exports[method].apply(this,urlparts.concat([callback]))
       }
-      else callback("oops")
+      else callback('oops')
     }).listen(port)
   })
 }
