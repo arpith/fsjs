@@ -20,8 +20,11 @@ var http = require('http')
   if (callback) callback()
 }
 , requireDirectory = function(dir,callback){
+  fs.watch(dir,function(event,filename){
+    requireFile(path.resolve(dir,filename))
+  })
   fs.readdir(dir,function(e,files){
-    if (e) console.log('Error reading '+dir)
+    if (e) console.log('Error reading '+dir+' as directory ')
     else files.forEach(function(filename,filenumber){
       requireFile(path.resolve(dir,filename),function(){
         if (filenumber === files.length-1) callback()
@@ -29,14 +32,8 @@ var http = require('http')
     })
   })
 }
-, watchDirectory = function(){
-  fs.watch(dir,function(event,filename){
-    requireFile(path.resolve(dir,filename))
-  })
-}
 module.exports = function(port){
   var args = Array.prototype.slice.call(arguments)
-  watchDirectory()
   requireDirectory(dir,function(){
     http.createServer(function(req,res){
       var urlparts = url.parse(req.url).pathname.split('/').slice(1)
