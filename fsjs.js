@@ -24,8 +24,7 @@ var http = require('http')
     requireFile(path.resolve(dir,filename))
   })
   fs.readdir(dir,function(e,files){
-    if (e) console.log('Error reading '+dir+' as directory ')
-    else files.forEach(function(filename,filenumber){
+    if (!e) files.forEach(function(filename,filenumber){
       requireFile(path.resolve(dir,filename),function(){
         if (filenumber === files.length-1) callback()
       })
