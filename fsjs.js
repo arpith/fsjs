@@ -16,7 +16,7 @@ var http = require('http')
   }
   if (callback) callback()
 }
-, requireDirectory = function(callback){
+, requireDir = function(callback){
   fs.readdir(dir,function(e,files){
     if (!e) files.forEach(function(filename,filenumber){
       requireFile(path.resolve(dir,filename),function(){
