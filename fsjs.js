@@ -5,24 +5,18 @@ var http = require('http')
 , dir = path.dirname(require.main.filename)
 , requireFile = function(name,callback){
   if (name != require.main.filename) {
-    if (path.extname(name) === '.js') {
-      if (require.cache[name]) delete require.cache[name]
-      try {
-        require(name)
-        console.log('Requiring '+name)
-      }
-      catch (e) {
-        console.log('Error requiring '+name)
-      }
+    if (require.cache[name]) delete require.cache[name]
+    try {
+      require(name)
+      console.log('Requiring '+name)
     }
-    else requireDirectory(name,callback)
-  } 
+    catch (e) {
+      if (path.extname(name) === '.js') console.log('Error requiring '+name)
+    }
+  }
   if (callback) callback()
 }
-, requireDirectory = function(dir,callback){
-  fs.watch(dir,function(event,filename){
-    requireFile(path.resolve(dir,filename))
-  })
+, requireDirectory = function(callback){
   fs.readdir(dir,function(e,files){
     if (!e) files.forEach(function(filename,filenumber){
       requireFile(path.resolve(dir,filename),function(){
@@ -31,9 +25,14 @@ var http = require('http')
     })
   })
 }
+, watchDir = function(callback){
+  fs.watch(dir,function(event,filename){
+    requireFile(path.resolve(dir,filename))
+  })
+}
 module.exports = function(port){
   var args = Array.prototype.slice.call(arguments)
-  requireDirectory(dir,function(){
+  watchDir(requireDir(function(){
     http.createServer(function(req,res){
       var urlparts = url.parse(req.url).pathname.split('/').slice(1)
       , method = req.method.toLowerCase()
